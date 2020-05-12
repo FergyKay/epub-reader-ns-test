@@ -1,0 +1,7 @@
+<StackLayout style="height: 100%;width: 100%;">
+    <WebView style="height: 90%;width: 100%;" (loaded)="wvloaded()" #webview></WebView>
+    <GridLayout columns="* *">
+        <Button col="0" (tap)="prevPage()" text="Previous"></Button>
+        <Button col="1" (tap)="nextPage()" text="Next"></Button>
+    </GridLayout>
+</StackLayout>
