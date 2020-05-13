@@ -1,14 +1,15 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
+import { NativeScriptPickerModule } from "nativescript-picker/angular";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { ItemsComponent } from "./item/items.component";
-import { ItemDetailComponent } from "./item/item-detail.component";
+
 import { EpubComponent } from './epub/epub.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
-// import { NativeScriptFormsModule } from "nativescript-angular/forms";
+import { NativeScriptFormsModule } from "nativescript-angular/forms";
+import { TocComponent } from './toc/toc.component';
 
 // Uncomment and add to NgModule imports if you need to use the HttpClient wrapper
 // import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
@@ -19,13 +20,14 @@ import { EpubComponent } from './epub/epub.component';
     ],
     imports: [
         NativeScriptModule,
-        AppRoutingModule
+        AppRoutingModule,
+        NativeScriptFormsModule,
+        NativeScriptPickerModule,
     ],
     declarations: [
         AppComponent,
-        ItemsComponent,
-        ItemDetailComponent,
-        EpubComponent
+        EpubComponent,
+        TocComponent,
     ],
     providers: [],
     schemas: [

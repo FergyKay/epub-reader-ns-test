@@ -1,10 +1,14 @@
 <AbsoluteLayout [ngClass]="viewMode==0?'light':'dark'" style="height: 100%;width: 100%">
     <StackLayout style="height: 100%;width: 100%;">
-        <StackLayout orientation="horizontal" style="height: 7%;width: 90%;margin-top: 3%;">
-            <Button text="Close Reader"></Button>
-            <Button (tap)="toggleControls()" text="Change Font"></Button>
-        </StackLayout>
-        <WebView style="height: 80%;width: 100%;background-color: transparent;" (loaded)="wvloaded()" #webview></WebView>
+        <GridLayout columns="* * *" style="height: 7%;width: 90%;margin-top: 3%;">
+            <Button col="0" text="Close Reader"></Button>
+            <Button  col='2' (tap)="toggleControls()" text="Change Font"></Button>
+            <Button col="1" (tap)="showToc()" text="Toc"></Button>
+
+            
+            <!-- <Button  col="1" text="Table of Contents"></Button> -->
+        </GridLayout>
+        <WebView style="height: 75%;width: 100%;background-color: transparent;" (loaded)="wvloaded()" #webview></WebView>
         <GridLayout style="height: 10%;background-color: transparent;" columns="* *">
             <Button col="0" (tap)="prevPage()" text="Previous"></Button>
             <Button col="1" (tap)="nextPage()" text="Next"></Button>

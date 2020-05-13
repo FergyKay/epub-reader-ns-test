@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ViewContainerRef } from '@angular/core';
 import { WebViewInterface } from 'nativescript-webview-interface';
 import { WebView } from 'tns-core-modules/ui/web-view/web-view';
 import { isAndroid, isIOS } from 'tns-core-modules/ui/page/page';
-import { SwipeGestureEventData } from "tns-core-modules/ui/gestures";
+import { RouterEvent, NavigationExtras } from '@angular/router';
+import { RouterExtensions } from 'nativescript-angular/router';
+import { ModalDialogOptions, ModalDialogService } from "nativescript-angular/modal-dialog";
+import { TocComponent } from '../toc/toc.component';
+
 
 
 
@@ -14,17 +18,25 @@ import { SwipeGestureEventData } from "tns-core-modules/ui/gestures";
 export class EpubComponent implements OnInit {
   @ViewChild('webview', { static: true }) webview: ElementRef
   private webViewInterface: WebViewInterface;
-  showControls = true;
+  showControls = false;
   public direction: number;
   public currentFontSize = 8
   viewMode = 0 //1 is dark
+  tocLoaded = false;
 
-  constructor() {
+  chapter = new EventEmitter<any>();
+
+
+
+  chapters = []
+
+
+
+  constructor(private router:RouterExtensions,private _modalService: ModalDialogService, private _vcRef: ViewContainerRef) {
 
   }
 
   ngOnInit(): void {
-    console.log("init")
   }
 
   wvloaded() {
@@ -42,21 +54,39 @@ export class EpubComponent implements OnInit {
       settings.setDisplayZoomControls(false);
     }
 
-    if(isIOS){
-      this.webview.nativeElement.ios.scrollView.bounces = false; 
-       }
+    if (isIOS) {
+      this.webview.nativeElement.ios.scrollView.bounces = false;
+      this.webview.nativeElement.ios.scalesPageToFit = false;
+      this.webview.nativeElement.ios.multipleTouchEnabled = false;
+    }
+
+
 
 
     this.webview.nativeElement.on(WebView.loadFinishedEvent, () => {
       this.webViewInterface.emit('loadBook', 'rj.epub');
     });
+
+    this.webViewInterface.on('chapters', (chapters => {
+       this.chapters = chapters
+       this.chapter.emit(this.chapters)
+       //console.log(chapters)
+    }))
+  }
+
+  setTocLoaded(){
+    this.tocLoaded = true
   }
 
   nextPage() {
+    console.log(this.chapters)
+    this.tocLoaded = true
     this.webViewInterface.emit('nextPage', '');
   }
 
   prevPage() {
+    this.tocLoaded = false
+
     this.webViewInterface.emit('prevPage', '');
   }
 
@@ -72,8 +102,36 @@ export class EpubComponent implements OnInit {
 
 
   switchToMode(mode) {
-   this.viewMode = mode
-   this.webViewInterface.emit('viewMode',mode)
+    this.viewMode = mode
+    this.webViewInterface.emit('viewMode', mode)
   }
+
+  showToc(){
+   
+    const options: ModalDialogOptions = {
+      viewContainerRef: this._vcRef,
+      context: {
+        data:this.chapters
+      },
+      fullscreen: false
+  };
+
+  this._modalService.showModal(TocComponent, options)
+      .then((result: string) => {
+         this.loadChapter(result)
+      });
+
+    
+  //  this.router.navigate(['../toc'],navExtras)
+  }
+
+
+
+
+  loadChapter(chaperUrl){
+    this.webViewInterface.emit('loadChapter',chaperUrl)
+  }
+
+
 
 }
