@@ -1,1 +1,10 @@
 /* Add mobile styles for the component here.  */
+.dark{
+    background-color: black;
+    color: gray;
+}
+
+.light{
+    background-color: white;
+    color: black;
+}

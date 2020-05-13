@@ -1,7 +1,42 @@
-<StackLayout style="height: 100%;width: 100%;">
-    <WebView style="height: 90%;width: 100%;" (loaded)="wvloaded()" #webview></WebView>
-    <GridLayout columns="* *">
-        <Button col="0" (tap)="prevPage()" text="Previous"></Button>
-        <Button col="1" (tap)="nextPage()" text="Next"></Button>
-    </GridLayout>
-</StackLayout>
+<AbsoluteLayout [ngClass]="viewMode==0?'light':'dark'" style="height: 100%;width: 100%">
+    <StackLayout style="height: 100%;width: 100%;">
+        <StackLayout orientation="horizontal" style="height: 7%;width: 90%;margin-top: 3%;">
+            <Button text="Close Reader"></Button>
+            <Button (tap)="toggleControls()" text="Change Font"></Button>
+        </StackLayout>
+        <WebView style="height: 80%;width: 100%;background-color: transparent;" (loaded)="wvloaded()" #webview></WebView>
+        <GridLayout style="height: 10%;background-color: transparent;" columns="* *">
+            <Button col="0" (tap)="prevPage()" text="Previous"></Button>
+            <Button col="1" (tap)="nextPage()" text="Next"></Button>
+        </GridLayout>
+    </StackLayout>
+    <StackLayout *ngIf="showControls" style="height: 100%;width: 100%;">
+        <!-- Overlay -->
+        <StackLayout (tap)="toggleControls()" style="height: 80%;width: 100%;background-color: rgba(0, 0, 0, 0.61);">
+        </StackLayout>
+
+        <!-- Controls -->
+        <StackLayout [ngClass]="viewMode==0?'light':'dark'" style="height: 20%;width: 100%;">
+            <GridLayout columns="* *" style="background-color: transparent;height: 40%;">
+                <StackLayout  col="0" style="margin: 0;padding: 0;border-width: 0.1;border-color: gray;">
+                    <Button  (tap)="switchToMode(0)"  text="Daytime Mode"></Button>
+                </StackLayout>
+                <StackLayout  col="1" style="margin: 0;padding: 0;border-width: 0.1;border-color: gray;">
+                    <Button (tap)="switchToMode(1)" text="Night Mode"></Button>
+                </StackLayout>
+            </GridLayout>
+            <StackLayout style="background-color: transparent;height: 60%;width: 90%;">
+                <GridLayout columns="auto * auto">
+                    <Label style="font-size: 10;" col="0" text="A"></Label>
+                    <Slider (valueChange)="onSliderValueChange($event.value)" style="margin-left: 10;margin-right: 10;" col="1" value="{{currentFontSize}}" minValue="8" maxValue="27" backgroundColor="gray" color="#033600">
+                    </Slider>
+                    <Label style="font-size: 30;" col="2" text="A"></Label>
+
+                </GridLayout>
+            
+
+            </StackLayout>
+
+        </StackLayout>
+    </StackLayout>
+</AbsoluteLayout>
